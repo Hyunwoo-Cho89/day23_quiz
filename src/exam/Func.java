@@ -1,10 +1,13 @@
 package exam;
 
+import java.sql.DriverManager;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
 
 import javax.swing.*;
+
 
 public class Func {
 	Scanner sc;
@@ -22,6 +25,7 @@ public class Func {
 			System.out.println("3.연락처 삭제");
 			System.out.println("4.연락처 검색");
 			System.out.println("5.전체 연락처 보기");
+			System.out.println("6.종료");
 			System.out.print(">>>>");
 			num = sc.nextInt();
 			
@@ -44,13 +48,46 @@ public class Func {
 				System.out.print("변경할 전화번호 입력 : "); dto.setNum(sc.next());
 				System.out.print("변경할 주소 입력 : "); dto.setAddr(sc.next());
 				result = db.modify(dto);
-				
+				if(result == 1) {
+					System.out.println("수정이 완료 되었습니다.");
+				}else System.out.println("수정 할 수 없습니다.");
 				break;
 			case 3:
+				System.out.println("삭제할 아이디 입력 : ");
+				result = db.delete(sc.next());
+				if(result==1) {
+					System.out.println("삭제 완료");
+				}else{
+					System.out.println("삭제할 수 없습니다.");
+				}
 				break;
 			case 4:
+				System.out.print("검색할 아이디 입력 : ");
+				dto =db.info(sc.next());
+				System.out.println("아아디 : "+dto.getAccount_id());
+				System.out.println("이름 : "+dto.getName());
+				System.out.println("번호 : "+dto.getNum());
+				System.out.println("주소 : "+dto.getAddr());
 				break;
 			case 5:
+				ArrayList<MemberDTO> list = db.list();
+				if(list.size() == 0) {
+					System.out.println("저장되어 있는 데이터가 없습니다.");
+				}else {
+					System.out.println("==========================");
+					System.out.println("id\t이름\t전화번호\t주소");
+					System.out.println("==========================");
+					for(int i=0;i<list.size();i++) {
+						
+						System.out.print(list.get(i).getAccount_id()+"\t");
+						System.out.print(list.get(i).getName()+"\t");
+						System.out.print(list.get(i).getNum()+"\t");
+						System.out.println(list.get(i).getAddr());
+						System.out.println("--------------------------");
+					}
+				}
+				break;
+			case 6:
 				System.out.println("종료합니다.");
 				return;
 			default : 
